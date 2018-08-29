@@ -21,6 +21,7 @@ interface IDataRequest {
   to?: string,
   precision: Precision
 }
+
 @Component
 export default class ResourceViewer extends Vue {
   private from: string = "1535520840";

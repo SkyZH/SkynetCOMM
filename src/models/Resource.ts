@@ -1,4 +1,3 @@
-import { database } from 'firebase';
 import firebase from '@/database';
 import { Observable, from as toObservable, Observer } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -26,7 +25,7 @@ export interface IData {
 }
 
 export class Resource {
-  private data: database.Reference
+  private data: firebase.database.Reference
   constructor(
     private source: string,
     private subscription: string
@@ -34,7 +33,7 @@ export class Resource {
     this.data = db.ref(`/${source}`).child(subscription);
   }
 
-  private firebaseSnapshotToDict(querySnapshot: database.DataSnapshot | null) {
+  private firebaseSnapshotToDict(querySnapshot: firebase.database.DataSnapshot | null) {
     const result: IData[] = [];
     if (!querySnapshot) return result;
     querySnapshot!.forEach(doc => {
@@ -47,8 +46,8 @@ export class Resource {
   }
 
   private firebaseFetchData(from: string, to: string, precision: Precision) {
-    return Observable.create((observer: Observer<database.DataSnapshot | null>) => {
-      const cmd = (querySnapshot: database.DataSnapshot | null) => {
+    return Observable.create((observer: Observer<firebase.database.DataSnapshot | null>) => {
+      const cmd = (querySnapshot: firebase.database.DataSnapshot | null) => {
         observer.next(querySnapshot);
         observer.complete();
       }
@@ -60,13 +59,13 @@ export class Resource {
       loc.once('value', cmd);
       return () => loc.off('value', cmd);
     }).pipe(
-      map((querySnapshot: database.DataSnapshot | null) => this.firebaseSnapshotToDict(querySnapshot))
+      map((querySnapshot: firebase.database.DataSnapshot | null) => this.firebaseSnapshotToDict(querySnapshot))
     );
   }
 
   private firebaseStreamData(from: string, limit: number, precision: Precision) {
-    return Observable.create((observer: Observer<database.DataSnapshot>) => {
-      const cmd = function (querySnapshot: database.DataSnapshot | null) {
+    return Observable.create((observer: Observer<firebase.database.DataSnapshot>) => {
+      const cmd = function (querySnapshot: firebase.database.DataSnapshot | null) {
         observer.next(querySnapshot!)
       }
       const loc = this.data.child(precision)
@@ -76,7 +75,7 @@ export class Resource {
       loc.on('value', cmd);
       return () => loc.off('value', cmd);
     }).pipe(
-      map((querySnapshot: database.DataSnapshot) => this.firebaseSnapshotToDict(querySnapshot))
+      map((querySnapshot: firebase.database.DataSnapshot) => this.firebaseSnapshotToDict(querySnapshot))
     )
   }
 

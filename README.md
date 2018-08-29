@@ -1,4 +1,6 @@
-# skynetcomm
+# SkynetCOMM
+
+[![Build Status](https://travis-ci.com/SkyZH/SkynetCOMM.svg?branch=master)](https://travis-ci.com/SkyZH/SkynetCOMM)
 
 ## Project setup
 ```
