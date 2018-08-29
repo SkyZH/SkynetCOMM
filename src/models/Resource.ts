@@ -1,6 +1,7 @@
 import firebase from '@/database';
 import { Observable, from as toObservable, Observer } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Auth } from './Auth';
 
 const db = firebase.database();
 
@@ -30,12 +31,15 @@ export class Resource {
     private source: string,
     private subscription: string
   ) {
+    Auth.getInstance().checkLoggedIn();
     this.data = db.ref(`/${source}`).child(subscription);
+    firebase.database().ref('.info/connected').on('value', d => console.log(d!.val()));
   }
 
   private firebaseSnapshotToDict(querySnapshot: firebase.database.DataSnapshot | null) {
     const result: IData[] = [];
     if (!querySnapshot) return result;
+    
     querySnapshot!.forEach(doc => {
       result.push({
         id: doc.key as string,
@@ -45,7 +49,7 @@ export class Resource {
     return result;
   }
 
-  private firebaseFetchData(from: string, to: string, precision: Precision) {
+  private firebaseFetchData(from: string, to: string, precision: Precision): Observable<IData[]> {
     return Observable.create((observer: Observer<firebase.database.DataSnapshot | null>) => {
       const cmd = (querySnapshot: firebase.database.DataSnapshot | null) => {
         observer.next(querySnapshot);
@@ -63,7 +67,7 @@ export class Resource {
     );
   }
 
-  private firebaseStreamData(from: string, limit: number, precision: Precision) {
+  private firebaseStreamData(from: string, limit: number, precision: Precision): Observable<IData[]> {
     return Observable.create((observer: Observer<firebase.database.DataSnapshot>) => {
       const cmd = function (querySnapshot: firebase.database.DataSnapshot | null) {
         observer.next(querySnapshot!)
@@ -79,11 +83,11 @@ export class Resource {
     )
   }
 
-  public stream(from: string, limit: number, precision: Precision) {
+  public stream(from: string, limit: number, precision: Precision): Observable<IData[]> {
     return this.firebaseStreamData(from, limit, precision);
   }
 
-  public fetch(from: string, to: string, precision: Precision) {
+  public fetch(from: string, to: string, precision: Precision): Observable<IData[]> {
     return this.firebaseFetchData(from, to, precision);
   }
 }

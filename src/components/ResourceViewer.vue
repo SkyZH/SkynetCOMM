@@ -9,10 +9,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Resource, IReport, IData, Precision } from '../models/Resource';
+import { Resource, IReport, IData, Precision } from '@/models/Resource';
 import { Subject, Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, debounceTime, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, debounceTime, map, switchMap, flatMap } from 'rxjs/operators';
 import _ from 'lodash';
+import firebase from '@/database';
 
 interface IDataRequest {
   stream: boolean,
@@ -60,6 +61,10 @@ export default class ResourceViewer extends Vue {
     } else {
       this.requestData(this.from, this.to, Precision.minute);
     }
+  }
+
+  mounted() {
+    this.onChange();
   }
 
   requestData(from: string, to: string, precision: Precision) {
