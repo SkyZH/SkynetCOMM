@@ -1,13 +1,24 @@
 language: node_js
 node_js:
-  - 'node' # use latest stable nodejs version
+- node
+before_script:
+- cd functions && yarn && cd ..
 script:
-  - yarn run test:unit # jest test with coverage flag does coverage too
-  - yarn run build
+- yarn run test:unit
+- yarn build
+- cd functions && yarn build && cd ..
 before_install:
-  - export TZ=Asia/Shanghai
-  - date
+- export TZ=Asia/Shanghai
+- date
 cache:
   yarn: true
   directories:
   - node_modules
+  - functions/node_modules
+deploy:
+  provider: firebase
+  token:
+    secure: HJBrkddRLSmCu5PtskICdIts6mKbCy32p55BPQLMY6YV44VSRplc5A7fg1wDEHOzY61aaurPA8rJ7PEfIxytJLOvM7e0ZAfdS0rsf6YzbXB71RAcOCUsGmUA8aLFmZRexXsrwsKmi8Gllz4Ne3FJB9hnm4OQrQT9LzWO9gxDN+Mza70k/S5/sDgDRBXN2k6LmgqcRzajWRv5XQlxE6xBCS53Yyn1JuQ2Qwdi418SK92Dwa4CqBKt2Tw4qi4+nIP3lsM1x37sNwx3oHbewPJXCBDPk6fB6vK3hPg2DtdboHep8cwqENafH96rD/Q51Kg6xWhqck0FaN1Waf3wPnKSxAJ3qk/0IctJ91Fl4pJKJT8SdEAqJUIlM78N6FKRZm7Sjw/gAdkNnkebQFMRgAAxwI7VdPhbOYVOMCKciPJ1BHfHqIdMTah/w/IIxqJ7d17QvtyKVlSBV4GebKgK3Qq8aythVBNCKaz4/brxyNYh/nUOU8ceVjuss/FEnGTwESO82+KRhCuF7oPpN4ul9NuOlG2sPBxYrpI/Gn/eyJFexvu52KmfaAuvbMV00LMFVBNYsoXiPP6XH9abdoq3MTVK+yOnlIuqPoBSCi2Y8T37qRjoyTsWpfNfvTSYbx8FEeaCDHczvxdYqfEIlRzOhAdYOQZ4EVoNXD+irNMwjRcwr8k=
+  project: "skyzh-30755"
+  message: Deployed via Travis CI
+  skip_cleanup: true

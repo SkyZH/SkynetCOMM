@@ -1,9 +1,11 @@
 <template>
   <div>
-    <input type="number" placeholder="from" class="form-control" v-model="from" @keyup="onChange">
-    <input type="number" placeholder="to" class="form-control" v-model="to" @keyup="onChange">
-    <input type="checkbox" class="form-control" v-model="live" @change="onChange">
-    {{ data }}
+    <!--<input type="number" placeholder="from" v-model="from" @keyup="onChange">
+    <input type="number" placeholder="to" v-model="to" @keyup="onChange">
+    <input type="checkbox" v-model="live" @change="onChange">-->
+    <div>
+      <OverviewChart :data="data" :size="[800, 80]" :fill="fill" :stroke="stroke"></OverviewChart>
+    </div>
   </div>
 </template>
 
@@ -14,6 +16,8 @@ import { Subject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, debounceTime, map, switchMap, flatMap } from 'rxjs/operators';
 import _ from 'lodash';
 import firebase from '@/database';
+import Chart from './Chart.vue';
+import OverviewChart from './OverviewChart.vue';
 
 interface IDataRequest {
   stream: boolean,
@@ -23,11 +27,18 @@ interface IDataRequest {
   precision: Precision
 }
 
-@Component
+@Component({
+  components: {
+    OverviewChart
+  }
+})
 export default class ResourceViewer extends Vue {
+  @Prop() private source?: string;
+  @Prop() private subscription?: string;
+
   private from: string = "1535520840";
   private to: string = "1535522700";
-  private live: boolean = false;
+  private live: boolean = true;
   private fired: string = "";
 
   private dataSource$: Subject<IDataRequest> | null = null;
@@ -36,8 +47,11 @@ export default class ResourceViewer extends Vue {
   private resource: Resource | null = null;
   private data: IData[] = [];
 
+  @Prop() private fill?: string;
+  @Prop() private stroke?: string;
+
   created() {
-    this.resource = new Resource('Raspi_Mon', 'CPU');
+    this.resource = new Resource(this.source!, this.subscription!);
     this.dataSource$ = new Subject<IDataRequest>();
     this.data$ = this.dataSource$.pipe(
       distinctUntilChanged(_.isEqual),
@@ -57,9 +71,9 @@ export default class ResourceViewer extends Vue {
 
   onChange() {
     if (this.live) {
-      this.requestStream(this.from, +this.to, Precision.minute);
+      this.requestStream(this.from, 120, Precision.second);
     } else {
-      this.requestData(this.from, this.to, Precision.minute);
+      this.requestData(this.from, this.to, Precision.second);
     }
   }
 
