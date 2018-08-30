@@ -17,7 +17,8 @@ interface IParsedData {
 
 @Component
 export default class OverviewChart extends Vue {
-  @Prop() private size?: [number, number];
+  @Prop() private width?: number;
+  @Prop() private height?: number;
   @Prop() private data?: IData[];
   @Prop() private title?: string;
 
@@ -32,10 +33,16 @@ export default class OverviewChart extends Vue {
     this.init();
   }
 
-  @Watch('size')
-  onSizeChanged(val: [number, number], oldval: [number, number]) {
+  @Watch('width')
+  onWidthChanged(val: number) {
     this.recreate();
   }
+
+  @Watch('height')
+  onHeightChanged(val: number) {
+    this.recreate();
+  }
+
 
   @Watch('data')
   onDataChanged(val: IData[]) { 
@@ -76,15 +83,15 @@ export default class OverviewChart extends Vue {
   recreate() {
     // 0. Create components
     const x = d3.scaleTime()
-      .range([0, this.size![0]])
+      .range([0, this.width!])
     this.x = x;
     const y = d3.scaleLinear()
-      .range([this.size![1], 0])
+      .range([this.height!, 0])
     this.y = y;
     // 1. Refer to base component
     const parent = d3.select(this.$el)
-      .attr('width', this.size![0])
-      .attr('height', this.size![1])
+      .attr('width', this.width!)
+      .attr('height', this.height!)
     parent.selectAll('*').remove()
     const g = parent.append('g');
     this.g = g;
@@ -93,7 +100,7 @@ export default class OverviewChart extends Vue {
     parent.append('g').append('text')
       .attr('text-anchor', 'start')
       .attr('transform', 'rotate(-90)')
-      .attr('x', -this.size![1] + 5)
+      .attr('x', -this.height! + 5)
       .attr('y', 10)
       .style('font-size', '12px')
       .text(this.title);
