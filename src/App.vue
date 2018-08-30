@@ -1,9 +1,13 @@
 <template>
   <div id="app" class="d-flex flex-column align-items-center">
-    <h1 class="display-3">Skynet·COMM</h1>
+    <div id="home-placeholder"></div>
+    <h1>SkyNet·COMM</h1>
+    <h3><del>Big Brother is Watching You.</del></h3>
+    <h2>Mr. Chi is monitoring his Raspberry Pi.</h2>
+    <p>Below are real-time data refreshing every 5 seconds</p>
     <ResourceViewer class="resource" :source="'Raspi_Mon'" :subscription="'CPU'" :fill="'#73e8ff'" :stroke="'#29b6f6'"></ResourceViewer>
     <ResourceViewer class="resource" :source="'Raspi_Mon'" :subscription="'Memory'" :fill="'#64d8cb'" :stroke="'#26a69a'"></ResourceViewer>
-    <ResourceViewer class="resource" :source="'Raspi_Mon'" :subscription="'Temperature'" :fill="'#ffff89'" :stroke="'#d4e157'"></ResourceViewer>
+    <ResourceViewer class="resource" :source="'Raspi_Mon'" :title="'Temp.'" :subscription="'Temperature'" :fill="'#ffff89'" :stroke="'#d4e157'"></ResourceViewer>
     <ResourceViewer class="resource" :source="'Raspi_Mon'" :subscription="'Voltage'" :fill="'#ffd95b'" :stroke="'#ffa726'"></ResourceViewer>
   </div>
 </template>
@@ -24,7 +28,8 @@ export default class App extends Vue {}
   @import "bootstrap/scss/_functions.scss";
   @import "bootstrap/scss/_variables.scss";
   @import "bootstrap/scss/_mixins.scss";
-  @import "bootstrap/scss/bootstrap.scss";
+  @import "bootstrap/scss/bootstrap-reboot.scss";
+  @import "bootstrap/scss/bootstrap-grid.scss";
   @import url('https://fonts.googleapis.com/css?family=Encode+Sans+Condensed:500');
   .svg-font {
     font-family: "Encode Sans Condensed", sans-serif;
@@ -40,6 +45,9 @@ export default class App extends Vue {}
   border-color: #ddd;
   border-width: 1px 0px 0px 0px;
   padding-top: 1rem;
+}
+#home-placeholder {
+  height: 40vh;
 }
 </style>
 

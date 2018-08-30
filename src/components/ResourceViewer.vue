@@ -4,7 +4,7 @@
     <input type="number" placeholder="to" v-model="to" @keyup="onChange">
     <input type="checkbox" v-model="live" @change="onChange">-->
     <div>
-      <OverviewChart :data="data" :size="[800, 80]" :fill="fill" :stroke="stroke"></OverviewChart>
+      <OverviewChart :data="data" :size="size" :fill="fill" :stroke="stroke" :title="title || subscription"></OverviewChart>
     </div>
   </div>
 </template>
@@ -35,11 +35,13 @@ interface IDataRequest {
 export default class ResourceViewer extends Vue {
   @Prop() private source?: string;
   @Prop() private subscription?: string;
+  @Prop() private title?: string;
 
   private from: string = "1535520840";
   private to: string = "1535522700";
   private live: boolean = true;
   private fired: string = "";
+  private size = [800, 50];
 
   private dataSource$: Subject<IDataRequest> | null = null;
   private data$: Observable<IData[]> | null = null;
