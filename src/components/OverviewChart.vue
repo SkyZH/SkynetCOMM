@@ -16,6 +16,7 @@ interface IParsedData {
 }
 
 const MARGIN_TOP = 15;
+const MARGIN_LEFT = 15;
 
 @Component
 export default class OverviewChart extends Vue {
@@ -26,9 +27,12 @@ export default class OverviewChart extends Vue {
 
   @Prop() private fill?: string;
   @Prop() private stroke?: string;
+
+  @Prop() private format?: (data: number) => string;
   
   private g?: any;
   private gA?: any;
+  private gT?: any;
   private x?: any;
   private y?: any;
   private xAxis?: any;
@@ -50,7 +54,7 @@ export default class OverviewChart extends Vue {
 
   @Watch('data')
   onDataChanged(val: IData[]) { 
-    this.update(this.g, this.x, this.y, this.gA);
+    this.update(this.g, this.x, this.y, this.gA, this.gT);
   }
 
   init() {
@@ -61,15 +65,16 @@ export default class OverviewChart extends Vue {
     return this.height! - MARGIN_TOP;
   }
 
-  update(g: any, x: any, y: any, gA: any) {
+  update(g: any, x: any, y: any, gA: any, gT: any) {
     // 0. Transform data
     const parsedData = _.map(this.data, d => ({
       timestamp: new Date(d.report.timestamp * 1000),
       data: d.report.data
     }) as IParsedData);
     // 1. Define Axis
+    const yRange = d3.extent(parsedData, (d: IParsedData) => d.data);
     x.domain(d3.extent(parsedData, (d: IParsedData) => d.timestamp));
-    y.domain(d3.extent(parsedData, (d: IParsedData) => d.data));
+    y.domain(yRange);
     this.xAxis.scale(x);
     // 2. Create Area
     const area = d3.area()
@@ -94,6 +99,10 @@ export default class OverviewChart extends Vue {
       .style('font-size', '8px')
       .style('text-anchor', 'end')
       .attr('transform', 'translate(5, 0)')
+    gT.select('.max')
+      .text(this.format!(yRange[1]));
+    gT.select('.min')
+      .text(this.format!(yRange[0]));
   }
 
   recreate() {
@@ -119,8 +128,21 @@ export default class OverviewChart extends Vue {
       .attr('transform', `translate(0, ${MARGIN_TOP})`);
     gA.append('g').attr('class', 'x');
     this.gA = gA;
-    this.update(this.g, this.x, this.y, this.gA);
-    // 3. Create Title
+    // 3. Create Range
+    const gT = parent.append('g').attr('transform', `translate(0, ${MARGIN_TOP})`);
+    gT.append('text')
+      .attr('class', 'max')
+      .attr('x', MARGIN_LEFT)
+      .attr('y', 10)
+      .style('font-size', 8);
+    gT.append('text')
+      .attr('class', 'min')
+      .attr('x', MARGIN_LEFT)
+      .attr('y', this.contentHeight() - 3)
+      .style('font-size', 8);
+    this.gT = gT;
+    this.update(this.g, this.x, this.y, this.gA, this.gT);
+    // 4. Create Title
     parent.append('g').append('text')
       .attr('text-anchor', 'start')
       .attr('transform', 'rotate(-90)')
@@ -128,7 +150,7 @@ export default class OverviewChart extends Vue {
       .attr('y', 10)
       .style('font-size', '12px')
       .text(this.title);
-
+    
   }
 }
 

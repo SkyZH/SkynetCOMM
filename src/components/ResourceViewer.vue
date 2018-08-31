@@ -1,7 +1,7 @@
 <template>
   <div id="resource_viewer">
     <div>
-      <OverviewChart :data="data" :width="size[0]" :height="size[1]" :fill="fill" :stroke="stroke" :title="title || subscription"></OverviewChart>
+      <OverviewChart :data="data" :width="size[0]" :height="size[1]" :fill="fill" :stroke="stroke" :title="title || subscription" :format="format"></OverviewChart>
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@ export default class ResourceViewer extends Vue {
   @Prop() private live!: boolean;
   @Prop() private limit!: number;
 
-  private size = [800, 70];
+  private size = [800, 100];
 
   private dataSource$!: Subject<IDataRequest>;
   private data$!: Observable<IData[]>;
@@ -128,6 +128,19 @@ export default class ResourceViewer extends Vue {
 
   processData(data: IData[]) {
     this.data = data;
+  }
+
+  format(data: number): string {
+    data = data || 0;
+    if (this.subscription == 'Memory') {
+      return `${Math.round(data / 1024 / 1024 * 10) / 10} MiB`;
+    } else if (this.subscription == 'CPU') {
+      return `${Math.round(data * 1000) / 10}%`;
+    } else if (this.subscription == 'Temperature') {
+      return `${Math.round(data * 100) / 100} °C`;
+    } else if (this.subscription == 'Voltage') {
+      return `${Math.round(data * 100) / 100} V`;
+    } else return `${Math.round(data * 100) / 100}`;
   }
 }
 </script>
