@@ -10,6 +10,7 @@
     <ResourceViewer class="resource" :source="'Raspi_Mon'" :title="'Temp.'" :subscription="'Temperature'" :fill="'#ffff89'" :stroke="'#d4e157'" :precision="source" :from="from" :limit="120" :live="true"></ResourceViewer>
     <ResourceViewer class="resource" :source="'Raspi_Mon'" :subscription="'Voltage'" :fill="'#ffd95b'" :stroke="'#ffa726'" :precision="source" :from="from" :limit="120" :live="true"></ResourceViewer>
     <p>An <a href="https://github.com/SkyZH/Skynetcomm">open-source project</a> by <a href="https://github.com/SkyZH">Sky Zhang</a></p>
+    <p>Ver. {{ VERSION }}</p>
   </div>
 </template>
 
@@ -28,6 +29,7 @@ import moment from 'moment';
 export default class App extends Vue {
   private source: string = 'second';
   private from: string = moment(Date.now()).subtract(1, 'month').unix().toString();
+  private VERSION = process.env.VERSION;
 }
 </script>
 

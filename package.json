@@ -37,6 +37,7 @@
     "firebase-mock": "^2.2.6",
     "firebase-server": "^1.0.0-rc.2",
     "fork-ts-checker-webpack-plugin": "^0.4.9",
+    "git-revision-webpack-plugin": "^3.0.3",
     "ts-jest": "^23.0.0",
     "typescript": "^3.0.0",
     "vue-template-compiler": "^2.5.17"

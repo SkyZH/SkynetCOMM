@@ -1,4 +1,9 @@
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+var GitRevisionPlugin = new (require('git-revision-webpack-plugin'))({
+  versionCommand: 'describe --always --tags'
+});
+const webpack = require('webpack');
+
 module.exports = {
   chainWebpack: config => {
     if (process.env.NODE_ENV === 'production') {
@@ -17,5 +22,14 @@ module.exports = {
         return args;
       })
     }
+    config.plugin('define').tap(definitions => {
+      definitions[0] = Object.assign(definitions[0], {
+        'process.env': {
+          VERSION: JSON.stringify(GitRevisionPlugin.version()),
+          COMMITHASH: JSON.stringify(GitRevisionPlugin.commithash())
+        }
+      })
+      return definitions;
+    })
   }
 }
