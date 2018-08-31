@@ -36,6 +36,7 @@
     "babel-core": "7.0.0-bridge.0",
     "firebase-mock": "^2.2.6",
     "firebase-server": "^1.0.0-rc.2",
+    "fork-ts-checker-webpack-plugin": "^0.4.9",
     "ts-jest": "^23.0.0",
     "typescript": "^3.0.0",
     "vue-template-compiler": "^2.5.17"
