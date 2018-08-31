@@ -5,7 +5,8 @@ module.exports = {
       config
         .plugin('fork-ts-checker')
         .tap(args => {
-          args[0].workers = ForkTsCheckerWebpackPlugin.ALL_CPUS;
+          args[0].memoryLimit = 4096
+          args[0].workers = Math.min(ForkTsCheckerWebpackPlugin.ALL_CPUS, 4);
           return args;
         })
     } else {
