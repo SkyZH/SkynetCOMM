@@ -33,7 +33,6 @@ export class Resource {
   ) {
     Auth.getInstance().checkLoggedIn();
     this.data = db.ref(`/${source}`).child(subscription);
-    firebase.database().ref('.info/connected').on('value', d => console.log(d!.val()));
   }
 
   private firebaseSnapshotToDict(querySnapshot: firebase.database.DataSnapshot | null) {

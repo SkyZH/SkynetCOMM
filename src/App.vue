@@ -1,14 +1,15 @@
 <template>
   <div id="app" class="d-flex flex-column align-items-center">
     <div id="home-placeholder"></div>
-    <h1>SkyNet·COMM</h1>
+    <h1><em>SkyNet</em>·COMM</h1>
     <h3><del>Big Brother is Watching You.</del></h3>
-    <h2>Mr. Chi is monitoring his Raspberry Pi.</h2>
+    <h2>Mr. Chi is monitoring his RasPi.</h2>
     <p>Below are real-time data refreshing <SourceSwitch id="source_switch" v-model="source"></SourceSwitch></p>
     <ResourceViewer class="resource" :source="'Raspi_Mon'" :subscription="'CPU'" :fill="'#73e8ff'" :stroke="'#29b6f6'" :precision="source" :from="from" :limit="120" :live="true"></ResourceViewer>
     <ResourceViewer class="resource" :source="'Raspi_Mon'" :subscription="'Memory'" :fill="'#64d8cb'" :stroke="'#26a69a'" :precision="source" :from="from" :limit="120" :live="true"></ResourceViewer>
     <ResourceViewer class="resource" :source="'Raspi_Mon'" :title="'Temp.'" :subscription="'Temperature'" :fill="'#ffff89'" :stroke="'#d4e157'" :precision="source" :from="from" :limit="120" :live="true"></ResourceViewer>
     <ResourceViewer class="resource" :source="'Raspi_Mon'" :subscription="'Voltage'" :fill="'#ffd95b'" :stroke="'#ffa726'" :precision="source" :from="from" :limit="120" :live="true"></ResourceViewer>
+    <p>An <a href="https://github.com/SkyZH/Skynetcomm">open-source project</a> by <a href="https://github.com/SkyZH">Sky Zhang</a></p>
   </div>
 </template>
 
@@ -49,6 +50,7 @@ export default class App extends Vue {
 #app {
   @include make-container();
   @include make-container-max-widths();
+  margin-bottom: 30vh;
 }
 .resource {
   border-style: solid;
@@ -59,7 +61,7 @@ export default class App extends Vue {
 #home-placeholder {
   height: 40vh;
 }
-#source_switch {
+a {
   color: #868e96 !important;
   -webkit-text-decoration: dotted underline;
   text-decoration: dotted underline;

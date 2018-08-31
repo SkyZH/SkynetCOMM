@@ -13,7 +13,6 @@ import { Subject, Observable, Subscription, fromEvent } from 'rxjs';
 import { distinctUntilChanged, debounceTime, map, switchMap, flatMap, debounce } from 'rxjs/operators';
 import _ from 'lodash';
 import firebase from '@/database';
-import Chart from './Chart.vue';
 import OverviewChart from './OverviewChart.vue';
 
 interface IDataRequest {

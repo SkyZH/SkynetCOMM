@@ -1,9 +1,12 @@
 import Vue from 'vue'
-import VueRx from 'vue-rx'
+const VueAnalytics = require('vue-analytics').default;
 import App from './App.vue'
 
 Vue.config.productionTip = false
-Vue.use(VueRx)
+Vue.use(VueAnalytics, {
+  id: 'UA-52525161-9',
+  disabled: process.env.NODE_ENV === 'development'
+});
 
 new Vue({
   render: h => h(App)
