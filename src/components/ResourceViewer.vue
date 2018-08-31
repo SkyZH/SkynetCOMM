@@ -38,7 +38,7 @@ export default class ResourceViewer extends Vue {
   @Prop() private live!: boolean;
   @Prop() private limit!: number;
 
-  private size = [800, 50];
+  private size = [800, 70];
 
   private dataSource$!: Subject<IDataRequest>;
   private data$!: Observable<IData[]>;
