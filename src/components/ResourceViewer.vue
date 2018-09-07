@@ -62,6 +62,14 @@ export default class ResourceViewer extends Vue {
   onLimitChange() { this.onChange(); }
   @Watch('live')
   onLiveChange() { this.onChange(); }
+  @Watch('subscription')
+  onSubscriptionChange() { this.onSourceChange(); }
+  @Watch('source')
+  onSourceChange() {
+    this.clear();
+    this.resource = new Resource(this.source!, this.subscription!);
+    this.onChange();
+  }
 
   private resizeSub!: Subscription;
 
@@ -70,11 +78,10 @@ export default class ResourceViewer extends Vue {
     this.resource = new Resource(this.source!, this.subscription!);
     this.dataSource$ = new Subject<IDataRequest>();
     this.data$ = this.dataSource$.pipe(
-      distinctUntilChanged(_.isEqual),
       debounceTime(300),
       switchMap(request => request.stream
-        ? this.resource!.stream(request.from, request.limit, request.precision)
-        : this.resource!.fetch(request.from, request.to, request.precision))
+        ? this.resource!.stream(request.from, request.limit!, request.precision)
+        : this.resource!.fetch(request.from, request.to!, request.precision))
     );
     this.sub = this.data$.subscribe(data => this.processData(data));
   }
@@ -97,6 +104,7 @@ export default class ResourceViewer extends Vue {
   }
 
   mounted() {
+    this.clear();
     this.resizeSub = fromEvent(window, 'resize').pipe(
       debounceTime(300),
       map(d => this.$el.clientWidth)
@@ -141,6 +149,16 @@ export default class ResourceViewer extends Vue {
     } else if (this.subscription == 'Voltage') {
       return `${Math.round(data * 100) / 100} V`;
     } else return `${Math.round(data * 100) / 100}`;
+  }
+
+  clear() {
+    this.processData([{
+      id: `${Date.now() / 1000}`,
+      report: {
+        timestamp: Date.now() / 1000,
+        data: 0
+      }
+    }])
   }
 }
 </script>
