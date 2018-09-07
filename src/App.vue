@@ -9,7 +9,7 @@
     <ResourceViewer class="resource" :source="model" :subscription="'Memory'" :fill="'#64d8cb'" :stroke="'#26a69a'" :precision="source" :from="from" :limit="120" :live="true"></ResourceViewer>
     <ResourceViewer class="resource" :source="model" :title="'Temp.'" :subscription="'Temperature'" :fill="'#ffff89'" :stroke="'#d4e157'" :precision="source" :from="from" :limit="120" :live="true"></ResourceViewer>
     <ResourceViewer class="resource" v-if="model == 'Raspi_Mon'" :source="model" :subscription="'Voltage'" :fill="'#ffd95b'" :stroke="'#ffa726'" :precision="source" :from="from" :limit="120" :live="true"></ResourceViewer>
-    <p>An <a href="https://github.com/SkyZH/Skynetcomm">open-source project</a> by <a href="https://github.com/SkyZH">Sky Zhang</a></p>
+    <p>An <a href="https://github.com/SkyZH/Skynetcomm">open-source project</a> by <a href="https://github.com/SkyZH">Alex Chi</a></p>
     <p>Ver. {{ VERSION }}</p>
     <img width="24" height="24" src="/logo.png">
   </div>
